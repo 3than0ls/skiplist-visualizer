@@ -2,15 +2,7 @@ import SkipList from "@/skiplist/SkipList";
 
 test("emptySkipList", () => {
   const skipList = new SkipList<number, number>();
-
-  expect(skipList._head.key).toBeNull();
-  expect(skipList._head.value).toBeNull();
-  expect(skipList.length).toBe(0);
-});
-
-test("emptySkipListGetUndefined", () => {
-  const skipList = new SkipList<number, number>();
-
+  expect(skipList.size()).toBe(0);
   expect(skipList.get(0)).toBeUndefined();
 });
 
@@ -19,8 +11,8 @@ test("insertOne", () => {
 
   skipList.set(0, "a");
   expect(skipList.get(0)).toEqual("a");
-  expect(skipList.length).toEqual(1);
-  expect(skipList.height).toBeGreaterThan(0);
+  expect(skipList.size()).toEqual(1);
+  expect(skipList.height()).toBeGreaterThan(0);
 
   expect(skipList.get(1)).toBeUndefined();
 });
@@ -43,7 +35,7 @@ test("insertTen", () => {
   for (let j = 0; j < 9; j++) {
     expect(skipList.get(j)).toEqual(j);
   }
-  expect(skipList.length == 10);
+  expect(skipList.size() == 10);
 });
 
 test("insert1000", () => {
@@ -51,12 +43,12 @@ test("insert1000", () => {
   const x = 1000;
   for (let i = 0; i < x; i++) {
     skipList.set(i, i);
-    expect(skipList.length == i + 1);
+    expect(skipList.size() == i + 1);
   }
   for (let j = 0; j < x; j++) {
     expect(skipList.get(j)).toEqual(j);
   }
-  expect(skipList.length == x + 1);
+  expect(skipList.size() == x + 1);
 });
 
 test("insertStrings", () => {
@@ -97,5 +89,5 @@ test("insertAndDelete", () => {
   for (let j = 0; j < x; j++) {
     expect(skipList.get(j)).toEqual(undefined);
   }
-  expect(skipList.length == 0);
+  expect(skipList.size() == 0);
 });

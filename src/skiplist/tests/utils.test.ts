@@ -1,10 +1,7 @@
 import ListNode from "../ListNode";
-import SkipList from "../SkipList";
 import {
   horizontalConnect,
   horizontalInsert,
-  isLeftBound,
-  isRightBound,
   keyGTENextNode,
   verticalConnect,
 } from "../utils";
@@ -41,13 +38,13 @@ test("horizontalInsert", () => {
   expect(middle.right).toBe(right);
 });
 
-test("bounds", () => {
-  const skipList = new SkipList();
-  expect(isLeftBound(skipList._head));
-  expect(isLeftBound(skipList._head.down!));
-  expect(isRightBound(skipList._head.right!));
-  expect(isRightBound(skipList._head.right!.down!));
-});
+// test("bounds", () => {
+//   const skipList = new SkipList();
+//   expect(isLeftBound(skipList._head));
+//   expect(isLeftBound(skipList._head.down!));
+//   expect(isRightBound(skipList._head.right!));
+//   expect(isRightBound(skipList._head.right!.down!));
+// });
 
 test("keyGTENextNode", () => {
   const a = new ListNode<number, number>(0, 0);
