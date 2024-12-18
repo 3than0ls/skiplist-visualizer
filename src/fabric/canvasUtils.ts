@@ -1,4 +1,10 @@
 import * as fabric from "fabric";
+import { BaseFabricObject } from "fabric";
+
+BaseFabricObject.ownDefaults.originX = "center";
+BaseFabricObject.ownDefaults.originY = "center";
+
+const CANVAS_BACKGROUND = "#ddd";
 
 export function initializeCanvas(canvasRef: HTMLCanvasElement) {
   const canvas = new fabric.Canvas(canvasRef, {
@@ -7,6 +13,7 @@ export function initializeCanvas(canvasRef: HTMLCanvasElement) {
     allowTouchScrolling: true,
     selection: false,
     defaultCursor: "move",
+    backgroundColor: CANVAS_BACKGROUND,
   });
   resizeCanvas(canvas);
   attachMouseListenersToCanvas(canvas);

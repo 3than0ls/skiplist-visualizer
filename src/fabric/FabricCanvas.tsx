@@ -3,6 +3,10 @@
 import * as fabric from "fabric";
 import React, { useEffect, useRef } from "react";
 import { initializeCanvas, resizeCanvas } from "./canvasUtils";
+import ListNodeFabric from "./ListNodeFabric";
+import SkipListFabric from "./SkipListFabric";
+import SkipList from "@/skiplist/SkipList";
+import { pureCoin } from "@/skiplist/heightFunctions";
 
 const FabricCanvas = () => {
   const fabricRef = useRef<fabric.Canvas | null>(null);
@@ -32,7 +36,8 @@ const FabricCanvas = () => {
     fabricRef.current = initializeCanvas(canvasRef.current!);
     window.addEventListener("resize", () => resizeCanvas(fabricRef.current!));
 
-    fabricRef.current?.add(
+    const grp = new fabric.Group(undefined, {});
+    grp.add(
       new fabric.Rect({
         top: 50,
         left: 50,
@@ -41,6 +46,12 @@ const FabricCanvas = () => {
         fill: "red",
       })
     );
+
+    // fabricRef.current?.add(new List().group());
+    const s = new SkipList<number, string>(pureCoin);
+    s.set(5, "hello");
+    s.set(10, "world");
+    fabricRef.current?.add(new SkipListFabric(s, { x: 100, y: 100 }).group());
 
     // fabricRef.current.renderAll();
     fabricRef.current.selection = false;

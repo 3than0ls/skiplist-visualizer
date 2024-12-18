@@ -10,7 +10,7 @@ type HeightFunctionArgs = {
 export type HeightFunction = (args: HeightFunctionArgs) => number;
 
 export function pureCoin({}: HeightFunctionArgs) {
-  let heads = 0;
+  let heads = 1;
   while (Math.random() > 0.5) {
     heads++;
   }
