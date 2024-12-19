@@ -3,9 +3,7 @@
 import * as fabric from "fabric";
 import React, { useEffect, useRef } from "react";
 import { initializeCanvas, resizeCanvas } from "./canvasUtils";
-import ListNodeFabric from "./ListNodeFabric";
 import SkipListFabric from "./SkipListFabric";
-import SkipList from "@/skiplist/SkipList";
 import { pureCoin } from "@/skiplist/heightFunctions";
 
 const FabricCanvas = () => {

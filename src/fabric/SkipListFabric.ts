@@ -1,4 +1,3 @@
-import ListNode from "@/skiplist/ListNode";
 import SkipList from "@/skiplist/SkipList";
 import * as fabric from "fabric";
 import ListNodeFabric, {
@@ -38,7 +37,7 @@ export default class SkipListFabric extends SkipList<NODE_KEY_T, NODE_VALUE_T> {
   }
 
   #createMap(width: number, height: number): ListNodeFabric[][] {
-    let out: ListNodeFabric[][] = [];
+    const out: ListNodeFabric[][] = [];
     for (let i = 0; i < height; i++) {
       out.push(new Array(width).fill(null));
     }
