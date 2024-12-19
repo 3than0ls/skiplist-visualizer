@@ -3,6 +3,7 @@ import SkipList from "@/skiplist/SkipList";
 test("emptySkipList", () => {
   const skipList = new SkipList<number, number>();
   expect(skipList.size()).toBe(0);
+  expect(skipList.height()).toBe(0);
   expect(skipList.get(0)).toBeUndefined();
 });
 

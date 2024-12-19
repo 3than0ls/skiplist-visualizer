@@ -12,7 +12,7 @@ import {
 class SkipList<K, V = unknown> {
   // "top-left" of the skip list, where search and insertion begins
   #head: ListNode<K, V>; // I could use typescript's # private, but then testing would be harder
-  #bottom_left: ListNode<K, V>;
+  protected bottom_left: ListNode<K, V>;
   #heightFunction: HeightFunction;
   #_size: number;
   #_height: number;
@@ -34,7 +34,7 @@ class SkipList<K, V = unknown> {
     verticalConnect(topRight, bottomRight);
 
     this.#head = topLeft;
-    this.#bottom_left = bottomLeft;
+    this.bottom_left = bottomLeft;
   }
 
   /**
@@ -147,10 +147,6 @@ class SkipList<K, V = unknown> {
 
   _head() {
     return this.#head;
-  }
-
-  _bottomLeft() {
-    return this.#bottom_left;
   }
 }
 

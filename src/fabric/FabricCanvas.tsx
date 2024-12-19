@@ -36,22 +36,13 @@ const FabricCanvas = () => {
     fabricRef.current = initializeCanvas(canvasRef.current!);
     window.addEventListener("resize", () => resizeCanvas(fabricRef.current!));
 
-    const grp = new fabric.Group(undefined, {});
-    grp.add(
-      new fabric.Rect({
-        top: 50,
-        left: 50,
-        width: 50,
-        height: 50,
-        fill: "red",
-      })
-    );
-
     // fabricRef.current?.add(new List().group());
-    const s = new SkipList<number, string>(pureCoin);
+    const s = new SkipListFabric(pureCoin, { x: 100, y: 100 });
     s.set(5, "hello");
-    s.set(10, "world");
-    fabricRef.current?.add(new SkipListFabric(s, { x: 100, y: 100 }).group());
+    // s.set(6, "hello");
+    s.set(7, "world");
+    // s.set(8, "world");
+    fabricRef.current?.add(s.group());
 
     // fabricRef.current.renderAll();
     fabricRef.current.selection = false;

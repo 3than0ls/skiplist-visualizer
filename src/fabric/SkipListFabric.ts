@@ -1,7 +1,12 @@
 import ListNode from "@/skiplist/ListNode";
 import SkipList from "@/skiplist/SkipList";
 import * as fabric from "fabric";
-import ListNodeFabric from "./ListNodeFabric";
+import ListNodeFabric, {
+  createFabricFromListNode,
+  NODE_KEY_T,
+  NODE_VALUE_T,
+} from "./ListNodeFabric";
+import { HeightFunction } from "@/skiplist/heightFunctions";
 
 type SkipListFabricOptions = {
   x: number;
@@ -12,16 +17,13 @@ export type SkipListDefaultType = SkipList<number, string>;
 
 const SKIPLISTFABRIC_NODE_OFFSET = 150;
 
-export default class SkipListFabric {
-  #skipList: SkipListDefaultType;
+export default class SkipListFabric extends SkipList<NODE_KEY_T, NODE_VALUE_T> {
   #group: fabric.Group;
   #options: SkipListFabricOptions;
 
-  constructor(
-    underlyingSkipList: SkipListDefaultType | undefined,
-    options: SkipListFabricOptions
-  ) {
-    this.#skipList = underlyingSkipList ?? new SkipList<number, string>();
+  constructor(heightFunction: HeightFunction, options: SkipListFabricOptions) {
+    super(heightFunction);
+
     this.#group = new fabric.Group(undefined, {
       top: options.x,
       left: options.y,
@@ -35,49 +37,20 @@ export default class SkipListFabric {
     this.#draw();
   }
 
-  #drawNodeCol(node: ListNode | null, x: number, y: number) {
-    if (node == null) {
-      return;
-    }
-
-    const lnf = new ListNodeFabric(node, { x, y });
-    this.#group.add(lnf.group());
-    this.#drawNodeCol(node.up, x, y - SKIPLISTFABRIC_NODE_OFFSET);
-    this.#drawNodeConnectionLine(x, y);
-  }
-
-  #drawNodeConnectionLine(
-    x: number,
-    y: number,
-    orientation: "vertical" | "horizontal" = "horizontal"
-  ) {
-    const [x2, y2] =
-      orientation == "horizontal"
-        ? [x + SKIPLISTFABRIC_NODE_OFFSET, y]
-        : [x, y + SKIPLISTFABRIC_NODE_OFFSET];
-
-    const line = new fabric.Line([x, y, x2, y2], {
-      stroke: "black",
-      strokeWidth: 2,
-    });
-
-    this.#group.add(line);
-  }
-
   #createMap(width: number, height: number): ListNodeFabric[][] {
-    let out = [];
+    let out: ListNodeFabric[][] = [];
     for (let i = 0; i < height; i++) {
       out.push(new Array(width).fill(null));
     }
 
-    let current = this.#skipList._bottomLeft();
+    let current = this.bottom_left;
     let row = 0;
     while (current != null) {
       let col = height - 1;
       let temp = current;
       while (temp != null) {
-        console.log("col", col);
-        out[col][row] = new ListNodeFabric(temp, {
+        console.log("setting", row, col);
+        out[col][row] = createFabricFromListNode(temp, {
           x: row * SKIPLISTFABRIC_NODE_OFFSET,
           y: col * SKIPLISTFABRIC_NODE_OFFSET,
         });
@@ -125,7 +98,6 @@ export default class SkipListFabric {
 
     // vertical lines
     const base = map.length - 1;
-    let baseColNode: ListNodeFabric | undefined = undefined;
     for (let i = 0; i < map[base].length; i++) {
       for (let j = 0; j < map.length; j++) {
         if (map[j][i] != null) {
@@ -146,6 +118,8 @@ export default class SkipListFabric {
   }
 
   #draw() {
+    this.#group.removeAll();
+
     /**
      * To represent the SkipList visually, we basically must strip away all advantages of the SkipList
      *
@@ -154,15 +128,19 @@ export default class SkipListFabric {
      *
      */
 
-    const bottomLeft = this.#skipList._bottomLeft();
-    const numNodes = this.#skipList.size() + 2; // add the two bounding nodes
-    const height = Math.max(this.#skipList.height() + 1, 2) + 2;
-    console.log(this.#skipList.height());
-
+    const numNodes = this.size() + 2; // add the two bounding nodes
+    const height = Math.max(this.height() + 1, 2) + 1;
     console.log(numNodes, height);
+
     const map = this.#createMap(numNodes, height);
+    console.log(map);
     this.#drawMap(map);
     this.#drawConnectingLines(map);
+  }
+
+  set(key: NODE_KEY_T, value: NODE_VALUE_T) {
+    super.set(key, value);
+    this.#draw();
   }
 
   group() {

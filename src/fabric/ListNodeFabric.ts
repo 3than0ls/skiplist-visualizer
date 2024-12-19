@@ -12,20 +12,22 @@ type ListNodeFabricOptions = {
 
 const LISTNODEFABRIC_SIZE = 100;
 
-export default class ListNodeFabric {
-  #node: ListNode;
+export type NODE_KEY_T = number;
+export type NODE_VALUE_T = string;
+
+export default class ListNodeFabric extends ListNode {
   #group: fabric.Group;
 
-  left: ListNodeFabric | null = null;
-  up: ListNodeFabric | null = null;
   x: number;
   y: number;
 
   constructor(
-    underlyingNode: ListNode | undefined,
+    key: NODE_KEY_T | null,
+    value: NODE_VALUE_T | null = null,
     options: ListNodeFabricOptions
   ) {
-    this.#node = underlyingNode ?? new ListNode<string, string>("NULL", "NULL");
+    super(key, value);
+
     this.#group = new fabric.Group(undefined, {});
     this.x = options.x;
     this.y = options.y;
@@ -33,16 +35,8 @@ export default class ListNodeFabric {
     this.#initialize();
   }
 
-  setLeft(left: ListNodeFabric) {
-    this.left = left;
-  }
-
-  setUp(up: ListNodeFabric) {
-    this.up = up;
-  }
-
   #initialize() {
-    const text = new fabric.FabricText(String(this.#node.key), {
+    const text = new fabric.FabricText(String(this.key), {
       left: this.x,
       top: this.y,
       fontFamily: "Arial",
@@ -65,15 +59,16 @@ export default class ListNodeFabric {
     this.#group.add(text);
   }
 
-  underlyingNode() {
-    return this.#node;
-  }
-
   group() {
     return this.#group;
   }
+}
 
-  toString() {
-    return this.#node.toString();
-  }
+export function createFabricFromListNode(
+  node: ListNode<NODE_KEY_T, NODE_VALUE_T>,
+  options: ListNodeFabricOptions
+) {
+  const fabricNode = new ListNodeFabric(node.key, node.value, options);
+  Object.assign(fabricNode, node);
+  return fabricNode;
 }
