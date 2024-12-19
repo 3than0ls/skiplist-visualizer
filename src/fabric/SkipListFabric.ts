@@ -91,6 +91,60 @@ export default class SkipListFabric {
     return out;
   }
 
+  #drawMap(map: ListNodeFabric[][]) {
+    for (let i = 0; i < map.length; i++) {
+      for (let j = 0; j < map[i].length; j++) {
+        if (!map[i][j]) continue;
+        this.#group.add(map[i][j].group());
+      }
+    }
+  }
+
+  #drawConnectingLines(map: ListNodeFabric[][]) {
+    // horizontal lines
+    let rowNode: ListNodeFabric | undefined = undefined;
+    for (let i = 0; i < map.length; i++) {
+      rowNode = undefined;
+      for (let j = 0; j < map[i].length; j++) {
+        if (!rowNode) {
+          rowNode = map[i][j];
+        } else {
+          if (map[i][j] == null) {
+            continue;
+          }
+          this.#group.insertAt(
+            0,
+            new fabric.Line([rowNode.x, rowNode.y, map[i][j].x, map[i][j].y], {
+              stroke: "black",
+              strokeWidth: 2,
+            })
+          );
+        }
+      }
+    }
+
+    // vertical lines
+    const base = map.length - 1;
+    let baseColNode: ListNodeFabric | undefined = undefined;
+    for (let i = 0; i < map[base].length; i++) {
+      for (let j = 0; j < map.length; j++) {
+        if (map[j][i] != null) {
+          this.#group.insertAt(
+            0,
+            new fabric.Line(
+              [map[base][i].x, map[base][i].y, map[j][i].x, map[j][i].y],
+              {
+                stroke: "black",
+                strokeWidth: 2,
+              }
+            )
+          );
+          break;
+        }
+      }
+    }
+  }
+
   #draw() {
     /**
      * To represent the SkipList visually, we basically must strip away all advantages of the SkipList
@@ -107,13 +161,8 @@ export default class SkipListFabric {
 
     console.log(numNodes, height);
     const map = this.#createMap(numNodes, height);
-
-    for (let i = 0; i < map.length; i++) {
-      for (let j = 0; j < map[i].length; j++) {
-        if (!map[i][j]) continue;
-        this.#group.add(map[i][j].group());
-      }
-    }
+    this.#drawMap(map);
+    this.#drawConnectingLines(map);
   }
 
   group() {
