@@ -141,6 +141,11 @@ export default class SkipListFabric extends SkipList<NODE_KEY_T, NODE_VALUE_T> {
     this.#draw();
   }
 
+  delete(key: NODE_KEY_T) {
+    super.delete(key);
+    this.#draw();
+  }
+
   group() {
     return this.#group;
   }

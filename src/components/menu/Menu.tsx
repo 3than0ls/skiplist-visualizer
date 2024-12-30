@@ -10,6 +10,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useSkipList } from "@/contexts/SkipListContext";
+import Form from "./Form";
 
 type Props = {};
 
@@ -17,19 +18,16 @@ const Menu = (props: Props) => {
   const { skipList, rerender } = useSkipList();
 
   return (
-    <Card className="absolute top-10 right-10">
-      <CardHeader>
+    <Card className="absolute top-10 right-10 p-2">
+      <CardHeader className="p-4">
         <CardTitle>Skip List Visualizer</CardTitle>
       </CardHeader>
-      <CardContent
-        onClick={() => {
-          skipList.set(1, "abc");
-          rerender();
-        }}
-      >
-        <p>Insert Element</p>
+      <hr className="border" />
+      <CardContent className="p-4">
+        <Form />
       </CardContent>
-      <CardFooter>
+      <hr className="border" />
+      <CardFooter className="p-4">
         <p>Created by </p>
       </CardFooter>
     </Card>
