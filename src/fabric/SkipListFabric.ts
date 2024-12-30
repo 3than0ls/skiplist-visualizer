@@ -26,6 +26,8 @@ export default class SkipListFabric extends SkipList<NODE_KEY_T, NODE_VALUE_T> {
     this.#group = new fabric.Group(undefined, {
       top: options.x,
       left: options.y,
+      selectable: false,
+      evented: false,
     });
     this.#options = options;
 
