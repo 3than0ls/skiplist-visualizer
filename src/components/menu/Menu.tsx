@@ -8,7 +8,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import Form from "./Form";
+import AddForm from "./AddForm";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
+import RandomizeForm from "./RandomizeForm";
 
 const Menu = () => {
   return (
@@ -18,7 +20,18 @@ const Menu = () => {
       </CardHeader>
       <hr className="border" />
       <CardContent className="p-4">
-        <Form />
+        <Tabs defaultValue="Add" className="w-full">
+          <TabsList className="w-full">
+            <TabsTrigger value="Add">Add Element</TabsTrigger>
+            <TabsTrigger value="Randomize">Randomize</TabsTrigger>
+          </TabsList>
+          <TabsContent value="Add">
+            <AddForm />
+          </TabsContent>
+          <TabsContent value="Randomize">
+            <RandomizeForm />
+          </TabsContent>
+        </Tabs>
       </CardContent>
       <hr className="border" />
       <CardFooter className="p-4">
