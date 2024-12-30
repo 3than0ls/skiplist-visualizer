@@ -4,9 +4,9 @@ import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import { useSkipList } from "@/contexts/SkipListContext";
 
-type Props = {};
-
-const Form = (props: Props) => {
+const Form = () => {
+  // i CANNOT be bothered to make a well organized nor well functional form
+  // NOT something I'm interested in doing here
   const [key, setKey] = useState<string | undefined>(undefined);
   const [value, setValue] = useState<string | undefined>(undefined);
 

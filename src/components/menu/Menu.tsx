@@ -4,19 +4,13 @@ import React from "react";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useSkipList } from "@/contexts/SkipListContext";
 import Form from "./Form";
 
-type Props = {};
-
-const Menu = (props: Props) => {
-  const { skipList, rerender } = useSkipList();
-
+const Menu = () => {
   return (
     <Card className="absolute top-10 right-10 p-2">
       <CardHeader className="p-4">
