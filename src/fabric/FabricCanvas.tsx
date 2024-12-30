@@ -26,36 +26,28 @@ const FabricCanvas = () => {
     // // s.set(8, "world");
     // fabricRef.current?.add(s.group());
 
-    fabricRef.current.add(skipList.group());
-
-    // fabricRef.current.selection = false;
-    // fabricRef.current.forEachObject(function (o) {
-    //   o.selectable = false;
-    //   o.evented = false;
-    // });
+    fabricRef.current.selection = false;
+    fabricRef.current.forEachObject(function (o) {
+      o.selectable = false;
+      o.evented = false;
+    });
 
     return () => {
       fabricRef.current?.dispose();
     };
-  });
+  }, []);
 
   useEffect(() => {
     if (!fabricRef.current) {
       return;
     }
 
-    console.log("somrething");
-
     // unsure if this is the best way to do this...
     fabricRef.current.getObjects().forEach((obj) => {
       fabricRef.current!.remove(obj);
     });
     fabricRef.current.add(skipList.group());
-    fabricRef.current.renderAll();
-
-    return () => {
-      fabricRef.current?.dispose();
-    };
+    // fabricRef.current.renderAll();
   }, [renderState, skipList]);
   //   useEffect(())
 
