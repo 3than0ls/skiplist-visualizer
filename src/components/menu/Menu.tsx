@@ -14,7 +14,7 @@ import { useSkipList } from "@/contexts/SkipListContext";
 type Props = {};
 
 const Menu = (props: Props) => {
-  const skipList = useSkipList();
+  const { skipList, rerender } = useSkipList();
 
   return (
     <Card className="absolute top-10 right-10">
@@ -23,8 +23,8 @@ const Menu = (props: Props) => {
       </CardHeader>
       <CardContent
         onClick={() => {
-          console.log("hello");
           skipList.set(1, "abc");
+          rerender();
         }}
       >
         <p>Insert Element</p>

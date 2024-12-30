@@ -10,9 +10,19 @@ import React, {
   ReactNode,
   useRef,
   useReducer,
+  useEffect,
+  useLayoutEffect,
 } from "react";
 
-const SkipListContext = createContext<SkipListFabric | undefined>(undefined);
+type SkipListContextType = {
+  skipList: SkipListFabric;
+  rerender: () => void;
+  renderState: number;
+};
+
+const SkipListContext = createContext<SkipListContextType | undefined>(
+  undefined
+);
 
 interface SkipListProviderProps {
   children: ReactNode;
@@ -23,9 +33,17 @@ export const SkipListProvider = ({ children }: SkipListProviderProps) => {
     new SkipListFabric(pureCoin, { x: 100, y: 100 })
   );
 
+  const [renderState, rerender] = useReducer((x) => x + 1, 0);
+
   // Function to update the custom object
   return (
-    <SkipListContext.Provider value={skipList.current}>
+    <SkipListContext.Provider
+      value={{
+        skipList: skipList.current!,
+        renderState,
+        rerender,
+      }}
+    >
       {children}
     </SkipListContext.Provider>
   );

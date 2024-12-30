@@ -11,8 +11,9 @@ const FabricCanvas = () => {
   const fabricRef = useRef<fabric.Canvas | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  const skipList = useSkipList();
+  const { skipList, renderState } = useSkipList();
 
+  // initialization
   useEffect(() => {
     fabricRef.current = initializeCanvas(canvasRef.current!);
     window.addEventListener("resize", () => resizeCanvas(fabricRef.current!));
@@ -27,17 +28,35 @@ const FabricCanvas = () => {
 
     fabricRef.current.add(skipList.group());
 
-    fabricRef.current.selection = false;
-    fabricRef.current.forEachObject(function (o) {
-      o.selectable = false;
-      o.evented = false;
-    });
+    // fabricRef.current.selection = false;
+    // fabricRef.current.forEachObject(function (o) {
+    //   o.selectable = false;
+    //   o.evented = false;
+    // });
 
     return () => {
       fabricRef.current?.dispose();
     };
   });
 
+  useEffect(() => {
+    if (!fabricRef.current) {
+      return;
+    }
+
+    console.log("somrething");
+
+    // unsure if this is the best way to do this...
+    fabricRef.current.getObjects().forEach((obj) => {
+      fabricRef.current!.remove(obj);
+    });
+    fabricRef.current.add(skipList.group());
+    fabricRef.current.renderAll();
+
+    return () => {
+      fabricRef.current?.dispose();
+    };
+  }, [renderState, skipList]);
   //   useEffect(())
 
   return <canvas ref={canvasRef} />;

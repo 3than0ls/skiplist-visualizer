@@ -48,7 +48,6 @@ export default class SkipListFabric extends SkipList<NODE_KEY_T, NODE_VALUE_T> {
       let col = height - 1;
       let temp = current;
       while (temp != null) {
-        console.log("setting", row, col);
         out[col][row] = createFabricFromListNode(temp, {
           x: row * SKIPLISTFABRIC_NODE_OFFSET,
           y: col * SKIPLISTFABRIC_NODE_OFFSET,
@@ -129,10 +128,8 @@ export default class SkipListFabric extends SkipList<NODE_KEY_T, NODE_VALUE_T> {
 
     const numNodes = this.size() + 2; // add the two bounding nodes
     const height = Math.max(this.height() + 1, 2) + 1;
-    console.log(numNodes, height);
 
     const map = this.#createMap(numNodes, height);
-    console.log(map);
     this.#drawMap(map);
     this.#drawConnectingLines(map);
   }
