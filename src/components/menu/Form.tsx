@@ -22,7 +22,7 @@ const Form = (props: Props) => {
       return;
     }
 
-    skipList.set(numKey, value ?? "Undefined.");
+    skipList.set(numKey, value ?? "null value");
     rerender();
   };
 

@@ -36,13 +36,16 @@ export default class ListNodeFabric extends ListNode {
   }
 
   #initialize() {
-    const text = new fabric.FabricText(String(this.key), {
-      left: this.x,
-      top: this.y,
-      fontFamily: "Arial",
-      fill: "#000",
-      fontSize: 20,
-    });
+    const keyText = new fabric.FabricText(
+      String(this.key == null ? "EDGE" : this.key),
+      {
+        left: this.x,
+        top: this.y,
+        fontFamily: "Arial",
+        fill: this.key == null ? "#999" : "#000",
+        fontSize: 20,
+      }
+    );
 
     const node = new fabric.Rect({
       left: this.x,
@@ -56,7 +59,20 @@ export default class ListNodeFabric extends ListNode {
     });
 
     this.#group.add(node);
-    this.#group.add(text);
+
+    if (this.value != null) {
+      keyText.set("top", this.y - 5);
+      const valueText = new fabric.FabricText(String(this.value), {
+        left: this.x,
+        top: this.y + 15,
+        fontFamily: "Arial",
+        fill: "#999",
+        fontSize: 16,
+      });
+      this.#group.add(valueText);
+    }
+
+    this.#group.add(keyText);
   }
 
   group() {
