@@ -7,29 +7,20 @@ import {
 } from "./ListNodeFabric";
 import { HeightFunction } from "@/skiplist/heightFunctions";
 
-type SkipListFabricOptions = {
-  x: number;
-  y: number;
-};
-
 export type SkipListDefaultType = SkipList<number, string>;
 
 const SKIPLISTFABRIC_NODE_OFFSET = 150;
 
 export default class SkipListFabric extends SkipList<NODE_KEY_T, NODE_VALUE_T> {
   #group: fabric.Group;
-  #options: SkipListFabricOptions;
 
-  constructor(heightFunction: HeightFunction, options: SkipListFabricOptions) {
+  constructor(heightFunction: HeightFunction) {
     super(heightFunction);
 
     this.#group = new fabric.Group(undefined, {
-      top: options.x,
-      left: options.y,
       selectable: false,
       evented: false,
     });
-    this.#options = options;
 
     this.#initialize();
   }

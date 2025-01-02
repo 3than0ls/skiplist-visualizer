@@ -25,9 +25,7 @@ interface SkipListProviderProps {
 }
 
 export const SkipListProvider = ({ children }: SkipListProviderProps) => {
-  const skipList = useRef<SkipListFabric>(
-    new SkipListFabric(pureCoin, { x: 100, y: 100 })
-  );
+  const skipList = useRef<SkipListFabric>(new SkipListFabric(pureCoin));
 
   const [renderState, rerender] = useReducer((x) => x + 1, 0);
 

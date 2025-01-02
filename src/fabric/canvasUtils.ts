@@ -15,6 +15,9 @@ export function initializeCanvas(canvasRef: HTMLCanvasElement) {
     defaultCursor: "move",
     backgroundColor: CANVAS_BACKGROUND,
   });
+
+  canvas.relativePan(new fabric.Point(200, 200));
+
   resizeCanvas(canvas);
   attachMouseListenersToCanvas(canvas);
 
