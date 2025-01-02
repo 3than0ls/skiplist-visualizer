@@ -4,6 +4,10 @@ import { Label } from "@radix-ui/react-label";
 import { useSkipList } from "@/contexts/SkipListContext";
 import { Button } from "../ui/button";
 
+function getRandomInt(min: number, max: number) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 const RandomizeForm = () => {
   const [num, setNum] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -18,7 +22,10 @@ const RandomizeForm = () => {
     }
 
     for (let i = 0; i < actualNumber; i++) {
-      skipList.set(i, "Value: " + i);
+      skipList.set(
+        getRandomInt(actualNumber * -10, actualNumber * 10),
+        "Value: " + i
+      );
     }
     rerender();
   };

@@ -35,7 +35,12 @@ const Menu = () => {
       </CardContent>
       <hr className="border" />
       <CardFooter className="p-4">
-        <p>Created by </p>
+        <a
+          className="text-sm text-gray-400 hover:underline"
+          href="https://en.wikipedia.org/wiki/Skip_list"
+        >
+          Wikipedia: Skip list
+        </a>
       </CardFooter>
     </Card>
   );
