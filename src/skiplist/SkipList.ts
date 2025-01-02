@@ -44,10 +44,10 @@ class SkipList<K, V = unknown> {
     let current = this.#head;
 
     while (!isBottomLayer(current)) {
+      current = current.down!;
       while (keyGTENextNode(key, current)) {
         current = current.right!;
       }
-      current = current.down!;
     }
 
     return current;
@@ -95,6 +95,8 @@ class SkipList<K, V = unknown> {
       searchNode.value = value;
       return;
     }
+
+    console.log(searchNode);
 
     // key does not exist, insert it with value
     const bottomNode = new ListNode<K, V>(key, value);
