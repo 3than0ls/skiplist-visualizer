@@ -1,6 +1,6 @@
 import SkipList from "@/skiplist/SkipList";
 import * as fabric from "fabric";
-import ListNodeFabric, {
+import {
   createFabricFromListNode,
   NODE_KEY_T,
   NODE_VALUE_T,
@@ -38,85 +38,6 @@ export default class SkipListFabric extends SkipList<NODE_KEY_T, NODE_VALUE_T> {
     this.#draw();
   }
 
-  #createMap(width: number, height: number): ListNodeFabric[][] {
-    const out: ListNodeFabric[][] = [];
-    for (let i = 0; i < height; i++) {
-      out.push(new Array(width).fill(null));
-    }
-
-    let current = this.bottom_left;
-    let row = 0;
-    while (current != null) {
-      let col = height - 1;
-      let temp = current;
-      while (temp != null) {
-        out[col][row] = createFabricFromListNode(temp, {
-          x: row * SKIPLISTFABRIC_NODE_OFFSET,
-          y: col * SKIPLISTFABRIC_NODE_OFFSET,
-        });
-        col -= 1;
-        temp = temp.up!;
-      }
-      row += 1;
-      current = current.right!;
-    }
-
-    return out;
-  }
-
-  #drawMap(map: ListNodeFabric[][]) {
-    for (let i = 0; i < map.length; i++) {
-      for (let j = 0; j < map[i].length; j++) {
-        if (!map[i][j]) continue;
-        this.#group.add(map[i][j].group());
-      }
-    }
-  }
-
-  #drawConnectingLines(map: ListNodeFabric[][]) {
-    // horizontal lines
-    let rowNode: ListNodeFabric | undefined = undefined;
-    for (let i = 0; i < map.length; i++) {
-      rowNode = undefined;
-      for (let j = 0; j < map[i].length; j++) {
-        if (!rowNode) {
-          rowNode = map[i][j];
-        } else {
-          if (map[i][j] == null) {
-            continue;
-          }
-          this.#group.insertAt(
-            0,
-            new fabric.Line([rowNode.x, rowNode.y, map[i][j].x, map[i][j].y], {
-              stroke: "black",
-              strokeWidth: 2,
-            })
-          );
-        }
-      }
-    }
-
-    // vertical lines
-    const base = map.length - 1;
-    for (let i = 0; i < map[base].length; i++) {
-      for (let j = 0; j < map.length; j++) {
-        if (map[j][i] != null) {
-          this.#group.insertAt(
-            0,
-            new fabric.Line(
-              [map[base][i].x, map[base][i].y, map[j][i].x, map[j][i].y],
-              {
-                stroke: "black",
-                strokeWidth: 2,
-              }
-            )
-          );
-          break;
-        }
-      }
-    }
-  }
-
   #draw() {
     this.#group.removeAll();
 
@@ -126,14 +47,86 @@ export default class SkipListFabric extends SkipList<NODE_KEY_T, NODE_VALUE_T> {
      * Every node must know it's relative position relative to the top-left head node (0, 0)
      * We'll change ListNodeFabric to be less dumb,
      *
+     *
+     * Needs to be completely reworked
+     *
+     * Most effective way to do this is to simply iterate through each row, drawing a line from one edge node to the end
+     * Then iterate through the bottom row, finding the number of nodes above it, then drawing a line from bottom row to top node
+     *
      */
 
     const numNodes = this.size() + 2; // add the two bounding nodes
-    const height = Math.max(this.height() + 1, 2) + 1;
+    const height = Math.max(this.height() + 2, 2);
 
-    const map = this.#createMap(numNodes, height);
-    this.#drawMap(map);
-    this.#drawConnectingLines(map);
+    // draw row lines
+    for (let i = 0; i < height; i++) {
+      this.#group.insertAt(
+        0,
+        new fabric.Line(
+          [
+            0,
+            i * SKIPLISTFABRIC_NODE_OFFSET,
+            (numNodes - 1) * SKIPLISTFABRIC_NODE_OFFSET,
+            i * SKIPLISTFABRIC_NODE_OFFSET,
+          ],
+          {
+            stroke: "black",
+            strokeWidth: 2,
+          }
+        )
+      );
+    }
+
+    // draw column lines
+    let current = this.bottom_left;
+    let offsetX = 0;
+    while (current != null) {
+      let offsetY = 0;
+      let temp = current;
+      while (temp.up != null) {
+        offsetY += SKIPLISTFABRIC_NODE_OFFSET;
+        temp = temp.up!;
+      }
+
+      this.#group.insertAt(
+        0,
+        new fabric.Line(
+          [
+            offsetX,
+            (height - 1) * SKIPLISTFABRIC_NODE_OFFSET - offsetY,
+            offsetX,
+            (height - 1) * SKIPLISTFABRIC_NODE_OFFSET,
+          ],
+          {
+            stroke: "black",
+            strokeWidth: 2,
+          }
+        )
+      );
+      offsetX += SKIPLISTFABRIC_NODE_OFFSET;
+      current = current.right!;
+    }
+
+    // draw nodes
+    current = this.bottom_left;
+    const bottomY = (height - 1) * SKIPLISTFABRIC_NODE_OFFSET;
+    offsetX = 0;
+    while (current != null) {
+      let offsetY = 0;
+      let temp = current;
+      while (temp != null) {
+        this.#group.add(
+          createFabricFromListNode(temp, {
+            x: offsetX,
+            y: bottomY - offsetY,
+          }).group()
+        );
+        offsetY += SKIPLISTFABRIC_NODE_OFFSET;
+        temp = temp.up!;
+      }
+      offsetX += SKIPLISTFABRIC_NODE_OFFSET;
+      current = current.right!;
+    }
   }
 
   set(key: NODE_KEY_T, value: NODE_VALUE_T) {
